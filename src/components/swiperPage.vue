@@ -6,20 +6,24 @@
               <Info></Info>
           </mt-swipe-item>
           <mt-swipe-item>
-              <Commit></Commit>    
+              <RespInfo></RespInfo>    
           </mt-swipe-item>
-          <mt-swipe-item>3</mt-swipe-item>
+          <mt-swipe-item>
+              <Commit></Commit>
+          </mt-swipe-item>
         </mt-swipe>
       </div>
     </div>    
 </template>
 <script>
-import Info from "./swiperItem/info.vue"
-import Commit from "./swiperItem/commit.vue"
+import Info from "./swiperItem/Info.vue";
+import RespInfo from "./swiperItem/RespInfo.vue";
+import Commit from "./swiperItem/Commit.vue";
 
 export default {
   components: {
     Info,
+    RespInfo,
     Commit
   },
 
@@ -37,9 +41,9 @@ export default {
 };
 </script>
 <style>
-.outer{
+.outer {
   width: 100%;
-  height: 100%;;
+  height: 100%;
 }
 
 .swiper-container {

@@ -7,7 +7,8 @@ let store = new Vuex.Store({
   state: {
     userInfo: {},
     repoInfo: {},
-    commitInfo: new Map()
+    commitInfo: {},
+    commitMap: {}
   },
 
   getters: {
@@ -21,6 +22,10 @@ let store = new Vuex.Store({
 
     getCommitInfo(state) {
       return state.commitInfo;
+    },
+
+    getCommitMap(state) {
+      return state.commitMap;
     }
   },
 
@@ -35,6 +40,10 @@ let store = new Vuex.Store({
 
     setCommit({ commit }, obj) {
       commit("setCommitInfo", obj);
+    },
+
+    setCommitMap({ commit }, obj) {
+      commit("setCommitMap", obj);
     }
   },
 
@@ -49,6 +58,10 @@ let store = new Vuex.Store({
 
     setCommitInfo(state, commitInfo) {
       state.commitInfo = commitInfo;
+    },
+
+    setCommitMap(state, commitMap) {
+      state.commitMap = commitMap;
     }
   }
 });

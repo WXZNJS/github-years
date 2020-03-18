@@ -34,7 +34,8 @@ export default {
       userName: "WXZNJS",
       isShow: false,
       isShowLoading: false,
-      msg: ""
+      msg: "",
+      commitMap: {}
     };
   },
 
@@ -60,7 +61,12 @@ export default {
       api.getAllRepo(this.userName).then(res => {
         var repoList = [];
         for (var i = 0; i < res.data.length; i++) {
-          repoList.push(res.data[i].full_name.split("/")[1]);
+          var obj = {};
+          obj.name = res.data[i].name;
+          obj.created_at = res.data[i].created_at;
+          obj.language = res.data[i].language;
+          obj.open_issues_count = res.data[i].open_issues_count;
+          repoList.push(obj);
         }
         console.log("repo", repoList);
         // 设置仓库信息
@@ -74,13 +80,15 @@ export default {
       let result = [];
       var self = this;
       for (let i = 0; i < repoList.length; i++) {
-        result.push(this.getRepoCommit(repoList[i]));
+        result.push(this.getRepoCommit(repoList[i].name));
       }
 
       var resp = Promise.all(result);
       resp.then(res => {
         console.log("commit", res);
+        console.log("commitMap", self.commitMap);
         // self.dealCommitInfo(res);
+        this.$store.dispatch("setCommitMap", self.commitMap);
         this.$store.dispatch("setCommit", res);
         this.isShowLoading = false;
         this.$router.push({ path: "swiperPage" });
@@ -92,6 +100,7 @@ export default {
       var promise = new Promise(function(resolve, reject) {
         api.getCommitInfo(self.userName, repoName).then(res => {
           resolve(res.data);
+          self.commitMap[repoName] = res.data.length;
         });
       });
       return promise;

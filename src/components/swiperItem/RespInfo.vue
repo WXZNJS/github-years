@@ -16,6 +16,14 @@
             <span class="issue-title">当前issue最多的仓库</span>
             <span class="issue-repo-name">{{issueRepo}}</span>
         </div>
+
+        <div class="chart-div">
+          <div class="chart-inner">
+            <span class="chart-title">你的编程语言Top5</span>
+            <canvas id="canvas" width="100px" height="100px"></canvas>
+            <canvas id="language-canvas" width="150px" height="100px"></canvas>
+          </div>
+        </div>
     </div>
 </template>
 <script>
@@ -65,6 +73,92 @@ export default {
     this.issueRepo = repoArray[issueIndex].name;
     this.maxRepoYear = maxCount;
     this.yearMap = yearMap;
+
+    // canvas
+    this.initCanvasData();
+  },
+
+  methods: {
+    initCanvasData() {
+      var repoArray = this.repoInfo;
+      var languageMap = {};
+      for (let i = 0; i < repoArray.length; i++) {
+        let language = repoArray[i].language;
+        if (!language) {
+          continue;
+        }
+        if (languageMap[language]) {
+          languageMap[language] += 1;
+        } else {
+          languageMap[language] = 1;
+        }
+      }
+
+      let totalCount = 0;
+      let keyArray = [];
+      for (var key in languageMap) {
+        keyArray.push(key);
+        totalCount += languageMap[key];
+      }
+
+      var dataArray = [];
+      var colorArray = ["#f77ea0", "#FF6347", "#75d83c", "#4de9e9", "#d29deb"];
+      for (var j = 0; j < keyArray.length; j++) {
+        if (j == 5) {
+          break;
+        }
+        dataArray.push({
+          color: colorArray[j],
+          value: languageMap[keyArray[j]] / totalCount
+        });
+      }
+      this.initCanvas(dataArray, keyArray);
+    },
+
+    initCanvas(dataArray, keyArray) {
+      /** @type {HTMLCanvasElement} */
+      // 文字canvas
+      let textCanvas = document.getElementById("language-canvas");
+      let textContext = textCanvas.getContext("2d");
+
+      // 饼图 canvas
+      let canvas = document.getElementById("canvas");
+      let context = canvas.getContext("2d");
+      var x0 = canvas.width * 0.5;
+      var y0 = canvas.height * 0.5;
+      var radius = 40;
+      var startAngle = -90 * Math.PI / 180;
+
+      for (var i = 0; i < dataArray.length; i++) {
+        let swipeAngle = dataArray[i].value * 2 * Math.PI;
+        let endAngle = startAngle + swipeAngle;
+
+        context.beginPath();
+        context.moveTo(x0, y0);
+        // 绘制圆弧
+        context.arc(x0, y0, radius, startAngle, endAngle);
+        // 设置颜色
+        context.fillStyle = dataArray[i].color;
+        // 填充
+        context.fill();
+        startAngle = endAngle;
+
+        // 绘制矩形
+        textContext.fillStyle = dataArray[i].color;
+        textContext.fillRect(0, 20 * i + 20, 30, 15);
+
+        // 绘制文字
+        textContext.font = "7pt normal";
+        var txtHeight = parseInt(textContext.font);
+        textContext.fillText(
+          keyArray[i] +
+            "  " +
+            ("(" + dataArray[i].value.toString().substring(2, 4) + "%)"),
+          35,
+          20 * i + 20 + txtHeight
+        );
+      }
+    }
   }
 };
 </script>
@@ -72,7 +166,7 @@ export default {
 <style>
 .outer {
   position: relative;
-  background: #f5f5f5;
+  background: white;
 }
 
 .header {
@@ -162,5 +256,37 @@ export default {
   padding-top: 10px;
   padding-bottom: 10px;
   font-size: 16px;
+}
+
+.chart-div {
+  position: absolute;
+  background: white;
+  height: 150px;
+  left: 20px;
+  right: 20px;
+  border-radius: 10px;
+  top: 54.8%;
+  padding-top: 10px;
+}
+
+.chart-inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+#canvas {
+  position: absolute;
+  right: 35px;
+  top: 20%;
+}
+
+#language-canvas {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  margin: 0;
 }
 </style>

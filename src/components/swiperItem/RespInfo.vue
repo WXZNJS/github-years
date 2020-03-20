@@ -3,7 +3,7 @@
         <div class="header">
             <span class="resp-title">仓库信息</span>
         </div>
-        <div class="resp-info">
+        <div class="resp-info" style="overflow:scroll;">
               <span class="total-desc">你一共创建了{{repoInfo.length}}个仓库</span>
               <div v-for="(value,key) in yearMap" :key="key" class="repoNum">
                   <span class="year-desc">{{key}}</span>
@@ -19,9 +19,9 @@
 
         <div class="chart-div">
           <div class="chart-inner">
-            <span class="chart-title">你的编程语言Top5</span>
+            <span class="chart-title">你的编程语言</span>
             <canvas id="canvas" width="100px" height="100px"></canvas>
-            <canvas id="language-canvas" width="150px" height="100px"></canvas>
+            <canvas id="language-canvas" width="150px" height="200px"></canvas>
           </div>
         </div>
     </div>
@@ -80,6 +80,18 @@ export default {
 
   methods: {
     initCanvasData() {
+      var colorArray = [
+        "#f77ea0",
+        "#FF6347",
+        "#75d83c",
+        "#4de9e9",
+        "#d29deb",
+        "#FFE4C4",
+        "#E6E6FA",
+        "#1E90FF",
+        "#FFEC8B"
+      ];
+
       var repoArray = this.repoInfo;
       var languageMap = {};
       for (let i = 0; i < repoArray.length; i++) {
@@ -94,19 +106,25 @@ export default {
         }
       }
 
-      let totalCount = 0;
+      // languageMap 排序
+      var sortArray = [];
+      for (var keyMap in languageMap) {
+        sortArray.push([keyMap, languageMap[keyMap]]);
+      }
+      sortArray.sort(function(a, b) {
+        return b[1] - a[1];
+      });
+
       let keyArray = [];
-      for (var key in languageMap) {
-        keyArray.push(key);
-        totalCount += languageMap[key];
+      let totalCount = 0;
+      console.log("sortArray", sortArray);
+      for (let k = 0; k < sortArray.length; k++) {
+        totalCount += sortArray[k][1];
+        keyArray.push(sortArray[k][0]);
       }
 
       var dataArray = [];
-      var colorArray = ["#f77ea0", "#FF6347", "#75d83c", "#4de9e9", "#d29deb"];
       for (var j = 0; j < keyArray.length; j++) {
-        if (j == 5) {
-          break;
-        }
         dataArray.push({
           color: colorArray[j],
           value: languageMap[keyArray[j]] / totalCount
@@ -150,6 +168,7 @@ export default {
         // 绘制文字
         textContext.font = "7pt normal";
         var txtHeight = parseInt(textContext.font);
+        console.log("drawText1", keyArray[i]);
         textContext.fillText(
           keyArray[i] +
             "  " +
@@ -163,10 +182,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .outer {
   position: relative;
-  background: white;
 }
 
 .header {
@@ -189,6 +207,7 @@ export default {
 .resp-info {
   position: absolute;
   background: white;
+  height: 150px;
   left: 20px;
   right: 20px;
   padding-bottom: 10px;
@@ -227,9 +246,9 @@ export default {
 
 .num-show {
   position: absolute;
-  left: 60px;
+  left: 50px;
   line-height: 24px;
-  color: white;
+  color: rgb(129, 72, 72);
   font-size: 14px;
 }
 
@@ -262,6 +281,7 @@ export default {
   position: absolute;
   background: white;
   height: 150px;
+  max-height: 150px;
   left: 20px;
   right: 20px;
   border-radius: 10px;
@@ -273,6 +293,7 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+  overflow: scroll;
 }
 
 #canvas {
@@ -284,8 +305,7 @@ export default {
 #language-canvas {
   position: absolute;
   left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 10%;
   padding: 0;
   margin: 0;
 }

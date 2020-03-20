@@ -7,7 +7,7 @@
                 <span class="title-tip">你一共commit了</span>
                 <span class="commit-count">{{totalCommitCount}}</span>
         </div>
-        <div class="year-card">
+        <div class="year-card" style="overflow:scroll;max-height:180px;">
             <div class="year-item" v-for="(value,key) in commitYearMap" :key="key">
                 <span class="year-desc">{{key}}</span>
                 <span class="length-desc" :style="'width:' + value.length / maxLength*70 + '%'"></span>
@@ -93,7 +93,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .outer {
   position: relative;
   background: #f5f5f5;
@@ -175,7 +175,7 @@ export default {
   position: absolute;
   left: 60px;
   line-height: 24px;
-  color: white;
+  color: rgb(129, 72, 72);
   font-size: 14px;
 }
 
@@ -203,7 +203,7 @@ export default {
   font-size: 18px;
 }
 
-.commit-times{
+.commit-times {
   padding-left: 15px;
   font-size: 14px;
   color: #f77ea0;

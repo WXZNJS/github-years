@@ -31,7 +31,7 @@ export default {
 
   data() {
     return {
-      userName: "WXZNJS",
+      userName: "",
       isShow: false,
       isShowLoading: false,
       msg: "",
@@ -46,7 +46,24 @@ export default {
     clickSure(inputValue) {
       this.isShow = false;
       this.isShowLoading = true;
-      this.getUserInfo();
+      this.userName = inputValue;
+      this.getStarInfo();
+    },
+
+    getStarInfo() {
+      var starInfo = [];
+      api.getStarredInfo(this.userName).then(res => {
+        let data = res.data;
+        for (let i = 0; i < data.length; i++) {
+          starInfo.push([
+            data[i].full_name,
+            data[i].stargazers_count,
+            data[i].language
+          ]);
+        }
+        this.$store.dispatch("setStarredArray", starInfo);
+        this.getUserInfo();
+      });
     },
 
     getUserInfo() {
@@ -142,7 +159,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .outer {
   width: 100%;
   height: 100%;

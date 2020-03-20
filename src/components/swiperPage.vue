@@ -11,6 +11,9 @@
           <mt-swipe-item>
               <Commit></Commit>
           </mt-swipe-item>
+          <mt-swipe-item>
+              <Star></Star>
+          </mt-swipe-item>
         </mt-swipe>
       </div>
     </div>    
@@ -19,12 +22,14 @@
 import Info from "./swiperItem/Info.vue";
 import RespInfo from "./swiperItem/RespInfo.vue";
 import Commit from "./swiperItem/Commit.vue";
+import Star from "./swiperItem/Star.vue";
 
 export default {
   components: {
     Info,
     RespInfo,
-    Commit
+    Commit,
+    Star
   },
 
   data() {
@@ -40,7 +45,7 @@ export default {
   mounted() {}
 };
 </script>
-<style>
+<style scoped>
 .outer {
   width: 100%;
   height: 100%;

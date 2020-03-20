@@ -13,5 +13,9 @@ export default {
     return axios.get(
       "https://api.github.com/repos/" + userName + "/" + respName + "/commits"
     );
+  },
+
+  getStarredInfo(userName) {
+    return axios.get("https://api.github.com/users/" + userName + "/starred");
   }
 };

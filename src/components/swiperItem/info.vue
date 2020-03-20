@@ -33,7 +33,7 @@ export default {
   methods: {}
 };
 </script>
-<style>
+<style scoped>
 .outer {
   background: #f5f5f5;
 }

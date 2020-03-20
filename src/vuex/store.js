@@ -8,7 +8,9 @@ let store = new Vuex.Store({
     userInfo: {},
     repoInfo: {},
     commitInfo: {},
-    commitMap: {}
+    commitMap: {},
+    // star 过的项目
+    starredArray: {}
   },
 
   getters: {
@@ -26,6 +28,10 @@ let store = new Vuex.Store({
 
     getCommitMap(state) {
       return state.commitMap;
+    },
+
+    getStaredArray(state) {
+      return state.starredArray;
     }
   },
 
@@ -44,6 +50,10 @@ let store = new Vuex.Store({
 
     setCommitMap({ commit }, obj) {
       commit("setCommitMap", obj);
+    },
+
+    setStarredArray({ commit }, obj) {
+      commit("setStarredArray", obj);
     }
   },
 
@@ -62,6 +72,10 @@ let store = new Vuex.Store({
 
     setCommitMap(state, commitMap) {
       state.commitMap = commitMap;
+    },
+
+    setStarredArray(state, starredArray) {
+      state.starredArray = starredArray;
     }
   }
 });
